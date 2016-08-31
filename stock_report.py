@@ -3,8 +3,6 @@
 
 import re
 
-
-
 def checkFileSize( file ):                              #检查读取文件是否错误
     content = file.read()
     if(len(content) > 1000 ):
@@ -69,14 +67,15 @@ detailName_outP.append(detailName[9])
 detailName_outP.append(detailName[10])
 detailName_outP.append('占比')
 
-for x in [0~stockCount]:
-   # detailItem[x]
-    print(detailItem[x])
+detailItem_outP = []
+for x in range(0,stockCount):
+    detailItem_outP[x].append(detailItem[x][1])
+    print(detailItem_outP[x])
 
 
-print(stockMarketValue,stockTotalAssets )
-print(totalAssets ) 
-print(reportDate_outP)
+#print(stockMarketValue,stockTotalAssets )
+#print(totalAssets ) 
+#print(reportDate_outP)
 print(detailName ) 
 print(detailName_outP ) 
 
