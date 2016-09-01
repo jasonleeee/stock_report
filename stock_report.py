@@ -51,7 +51,7 @@ reportDate = fList[datailDataLine + stockCount + 2]                #报告生成
 reportDate = reportDate[5:15]
 
 otherAssets = 20400                          #外部资产
-totalAssets = stockTotalAssets + otherAssets
+totalAssets = stockTotalAssets + otherAssets    #总资产
 
 checkFileSize(f)
 checkDetail(fList)
@@ -65,19 +65,39 @@ detailName_outP.append(detailName[3])
 detailName_outP.append(detailName[7])
 detailName_outP.append(detailName[9])
 detailName_outP.append(detailName[10])
-detailName_outP.append('占比')
+detailName_outP.append('资金占比')
 
 detailItem_outP = []
-for x in range(0,stockCount):
-    detailItem_outP[x].append(detailItem[x][1])
-    print(detailItem_outP[x])
 
+for x in range(0,stockCount):
+    detailItem_oneItem = []
+    detailItem_oneItem.append(detailItem[x][1])         #证券代码
+    detailItem_oneItem.append(detailItem[x][2])         #证券名称
+    detailItem[x][3] = float(detailItem[x][3])
+    detailItem_oneItem.append(detailItem[x][3])         #股票余额
+    detailItem[x][7] = float(detailItem[x][7])
+    detailItem_oneItem.append(detailItem[x][7])         #成本价
+    detailItem[x][9] = float(detailItem[x][9])
+    detailItem_oneItem.append(detailItem[x][9])         #市价
+    detailItem[x][10] = float(detailItem[x][10])
+    detailItem_oneItem.append(detailItem[x][10])        #市值
+    detailItem_oneItem.append(round(detailItem[x][10]/totalAssets, 3)) #资产占比
+    detailItem_outP.append(detailItem_oneItem)
+
+
+stockProportionTotalAssets = round(stockTotalAssets/totalAssets ,3)
 
 #print(stockMarketValue,stockTotalAssets )
 #print(totalAssets ) 
 #print(reportDate_outP)
-print(detailName ) 
+#print(detailName )
+print(reportDate_outP)
 print(detailName_outP ) 
+for x in range(0,stockCount):
+    print(detailItem_outP[x])
 
+print(stockProportionTotalAssets)
+print(totalAssets)
+######数据存储######
 
 
