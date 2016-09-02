@@ -27,37 +27,51 @@ f = open('1.txt', 'r')
 
 fList = f.readlines()
 
-
-department = fList[1][6:]                       #营业部名称
-shareholder = fList[2][3:]                      #股东
-fundBallance = fList[3][5:14]               #资金余额
+#营业部名称
+department = fList[1][6:]                       
+#股东
+shareholder = fList[2][3:]                      
+#资金余额            
+fundBallance = re.findall(r'\d+\.?\d', fList[3])
+fundBallance = fundBallance[0]
 fundBallance = float(fundBallance)
-stockMarketValue = fList[4][17:]        #股票市值
+#股票市值
+stockMarketValue = re.findall(r'\d+\.?\d', fList[4])
+stockMarketValue = stockMarketValue[1]
 stockMarketValue = float(stockMarketValue)
-stockTotalAssets = fList[5][22:]         #股票账户总 资 产
+#股票账户总 资 产
+stockTotalAssets = re.findall(r'\d+\.?\d', fList[5])
+stockTotalAssets = stockTotalAssets[1]
 stockTotalAssets = float(stockTotalAssets)
-detailName = re.split(r'\s+', fList[8])                         #股票明细名称
+#股票明细名称
+detailName = re.split(r'\s+', fList[8])                         
 
-
+#股票明细数据
 datailDataLine = 9
 stockCount = 0
 detailItem = []
-while( len(fList[datailDataLine + stockCount]) > 2 ):                  #股票明细
+while( len(fList[datailDataLine + stockCount]) > 2 ):                  
     m = re.split(r'\s+', fList[datailDataLine + stockCount])
     detailItem.append(m)
     stockCount = stockCount + 1
-
-reportDate = fList[datailDataLine + stockCount + 2]                #报告生成日期
+    
+#报告生成日期
+reportDate = fList[datailDataLine + stockCount + 2]                
 reportDate = reportDate[5:15]
 
-otherAssets = 20400                          #外部资产
-totalAssets = stockTotalAssets + otherAssets    #总资产
+#外部资产
+otherAssets = 30400
+#总资产
+totalAssets = stockTotalAssets + otherAssets    
 
 checkFileSize(f)
 checkDetail(fList)
 f.close()
+
 ######数据处理######
+#日期
 reportDate_outP = reportDate + '========'
+#明细项目名称
 detailName_outP = []
 detailName_outP.append(detailName[1])
 detailName_outP.append(detailName[2])
@@ -67,8 +81,8 @@ detailName_outP.append(detailName[9])
 detailName_outP.append(detailName[10])
 detailName_outP.append('资金占比')
 
+#明细数据
 detailItem_outP = []
-
 for x in range(0,stockCount):
     detailItem_oneItem = []
     detailItem_oneItem.append(detailItem[x][1])         #证券代码
@@ -84,20 +98,43 @@ for x in range(0,stockCount):
     detailItem_oneItem.append(round(detailItem[x][10]/totalAssets, 3)) #资产占比
     detailItem_outP.append(detailItem_oneItem)
 
+#总股票资产占比
+stockProportionTotalAssets = round(stockMarketValue/totalAssets ,3)
 
-stockProportionTotalAssets = round(stockTotalAssets/totalAssets ,3)
 
-#print(stockMarketValue,stockTotalAssets )
-#print(totalAssets ) 
-#print(reportDate_outP)
-#print(detailName )
 print(reportDate_outP)
-print(detailName_outP ) 
+print(detailName_outP )
+print(len(detailName_outP))
 for x in range(0,stockCount):
     print(detailItem_outP[x])
 
 print(stockProportionTotalAssets)
 print(totalAssets)
 ######数据存储######
+
+f_DataStorage = open(reportDate+ '.txt' , 'w')
+
+f_DataStorage.write(reportDate_outP + '\n')
+for x in range(0, len(detailName_outP)):
+    f_DataStorage.writelines(detailName_outP[x] + '\t')
+f_DataStorage.writelines('\n')
+
+for x in range(0, stockCount):
+    for y in range(0, len(detailItem_outP[x]) - 1):
+        f_DataStorage.writelines(str(detailItem_outP[x][y]) + '\t')
+    f_DataStorage.writelines(str(round(detailItem_outP[x][y + 1] * 100, 3)) + '%\n')
+
+f_DataStorage .writelines('股票持仓比例: ' + str(round(stockProportionTotalAssets * 100, 3)) + '%\n')
+f_DataStorage.writelines('上证: ' + '\n')
+f_DataStorage.writelines('总资产: ' + str(totalAssets) + '\n')
+
+f_DataStorage.close()
+
+
+
+
+
+
+
 
 
