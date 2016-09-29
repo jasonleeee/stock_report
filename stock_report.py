@@ -60,7 +60,7 @@ reportDate = fList[datailDataLine + stockCount + 2]
 reportDate = reportDate[5:15]
 
 #外部资产
-otherAssets = 30400
+otherAssets = 30300
 #总资产
 totalAssets = stockTotalAssets + otherAssets    
 
